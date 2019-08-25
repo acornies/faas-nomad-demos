@@ -70,7 +70,6 @@ EOH
       template {
         env = true
         destination  = "secrets/gateway.env"
-
         data = <<EOH
 functions_provider_url="http://{{ env "NOMAD_IP_http" }}:8081/"
 {{ range service "prometheus" }}
@@ -93,6 +92,7 @@ max_idle_conns_per_host="1024"
 auth_proxy_url="http://{{ env "NOMAD_IP_http" }}:8082/validate"
 auth_proxy_pass_body="false"
 EOH
+        change_mode = "restart"
       }
 
       config {
@@ -303,7 +303,7 @@ EOH
       }
 
       artifact {
-			  source      = "https://raw.githubusercontent.com/hashicorp/faas-nomad/master/nomad_job_files/templates/prometheus.yml"
+			  source      = "https://raw.githubusercontent.com/acornies/THUG-aug27-2019/master/contrib/prometheus/prometheus.yml"
 			  destination = "local/prometheus.yml.tpl"
 				mode        = "file"
 			}
@@ -315,7 +315,7 @@ EOH
       }
 			
 			artifact {
-			  source      = "https://raw.githubusercontent.com/openfaas/faas/master/prometheus/alert.rules.yml"
+			  source      = "https://raw.githubusercontent.com/acornies/THUG-aug27-2019/master/contrib/prometheus/alert.rules.yml"
 			  destination = "local/alert.rules.yml"
 				mode        = "file"
 			}
@@ -347,7 +347,7 @@ EOH
       driver = "docker"
 
 			artifact {
-			  source      = "https://raw.githubusercontent.com/hashicorp/faas-nomad/master/nomad_job_files/templates/alertmanager.yml"
+			  source      = "https://raw.githubusercontent.com/acornies/THUG-aug27-2019/master/contrib/prometheus/alertmanager.yml"
 			  destination = "local/alertmanager.yml.tpl"
 				mode        = "file"
 			}
@@ -371,6 +371,25 @@ EOH
           "--config.file=/local/alertmanager.yml",
           "--storage.path=/alertmanager",
         ]
+      }
+
+      vault {
+        policies = ["openfaas"]
+      }
+      // basic auth from vault example
+      // update -enable_basic_auth=true
+      // uncomment below if you have a Vault instance connected to Nomad
+      template {
+        destination   = "secrets/basic-auth-user"
+        data = <<EOH
+{{ with secret "secret/openfaas/auth/credentials" }}{{ .Data.username }}{{ end }}
+EOH
+      }
+      template {
+        destination   = "secrets/basic-auth-password"
+        data = <<EOH
+{{ with secret "secret/openfaas/auth/credentials" }}{{ .Data.password }}{{ end }}
+EOH
       }
 
       resources {

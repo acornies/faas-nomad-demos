@@ -23,4 +23,4 @@ receivers:
         http_config:
           basic_auth:
             username: admin
-            password_file: /run/secrets/basic-auth-password
+            password_file: /secrets/basic-auth-password
