@@ -19,8 +19,8 @@ job "faas" {
           "-statsd_addr", "${NOMAD_ADDR_statsd_statsd}",
           "-node_addr", "${NOMAD_IP_http}",
           "-vault_addr", "http://${NOMAD_IP_http}:8200",
-          "-vault_app_role_id", "205acfe8-11ad-1411-70df-e6e991b7570b",
-          "-vault_app_secret_id", "45f45e52-7088-6aee-46bb-e6028075e449",
+          "-vault_app_role_id", "",
+          "-vault_app_secret_id", "",
           "-basic_auth_secret_path", "/secrets",
           "-enable_basic_auth=true",
           "-logger_level", "TRACE"
