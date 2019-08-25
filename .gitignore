@@ -1,0 +1,4 @@
+.vagrant
+*.log
+contrib/salt/states/nomad
+contrib/salt/states/vault
