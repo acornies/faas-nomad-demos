@@ -72,9 +72,8 @@ EOH
         destination  = "secrets/gateway.env"
         data = <<EOH
 functions_provider_url="http://{{ env "NOMAD_IP_http" }}:8081/"
-{{ range service "prometheus" }}
-faas_prometheus_host="{{ .Address }}"
-faas_prometheus_port="{{ .Port }}"{{ end }}
+faas_prometheus_host="{{ env "NOMAD_IP_http" }}"
+faas_prometheus_port="9090"
 {{ range service "nats" }}
 faas_nats_address="{{ .Address }}"
 faas_nats_port={{ .Port }}{{ end }}
@@ -89,16 +88,16 @@ secret_mount_path="/secrets/"
 scale_from_zero="false" # Enable if you want functions to scale from 0/0 to min replica count upon invoke
 max_idle_conns="1024"
 max_idle_conns_per_host="1024"
-auth_proxy_url="http://{{ env "NOMAD_IP_http" }}:8082/validate"
+auth_proxy_url="http://{{ env "NOMAD_IP_http" }}:8083/validate"
 auth_proxy_pass_body="false"
 EOH
-        change_mode = "restart"
       }
 
       config {
         image = "openfaas/gateway:0.17.0"
         port_map {
           http = 8080
+          metrics = 8082
         }
       }
 
@@ -126,12 +125,21 @@ EOH
           port "http" {
             static = 8080
           }
+          port "metrics" {
+            static = 8082
+          }
         }
       }
 
       service {
         port = "http"
         name = "gateway"
+        tags = ["faas"]
+      }
+
+      service {
+        port = "metrics"
+        name = "faas-metrics"
         tags = ["faas"]
       }
     }
@@ -179,15 +187,9 @@ EOH
         memory = 50
         network {
           port "http" {
-            static = 8082
+            static = 8083
           }
         }
-      }
-
-      service {
-        port = "http"
-        name = "gateway"
-        tags = ["faas"]
       }
     }
 
