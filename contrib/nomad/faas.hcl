@@ -370,8 +370,7 @@ EOH
         dns_servers = ["${NOMAD_IP_http}"]
 
         args = [
-          "--config.file=/local/alertmanager.yml",
-          "--storage.path=/alertmanager",
+          "--config.file=/local/alertmanager.yml"
         ]
       }
 
@@ -396,7 +395,9 @@ EOH
 
       resources {
         network {
-          port "http" {}
+          port "http" {
+            static = 9093
+          }
         }
       }
 

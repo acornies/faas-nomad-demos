@@ -28,6 +28,7 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 8200, host: 8200
   config.vm.network "forwarded_port", guest: 8080, host: 8080
   config.vm.network "forwarded_port", guest: 9090, host: 9090
+  config.vm.network "forwarded_port", guest: 3000, host: 3000
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine and only allow access
@@ -59,7 +60,7 @@ Vagrant.configure("2") do |config|
     vb.gui = false
   
     # Customize the amount of memory on the VM:
-    vb.memory = "2048"
+    vb.memory = "4096"
     vb.cpus = 2
     override.vm.provision :salt do |salt|
       salt.minion_config = "contrib/salt/etc/minion_virtualbox.yaml"
@@ -69,13 +70,12 @@ Vagrant.configure("2") do |config|
     end
     # pre-populate Vault
     override.vm.provision "shell", path: "contrib/scripts/vault_populate.sh"
-    # override.vm.provision "shell", path: "contrib/scripts/nomad_run.sh"
   end
 
   config.vm.provider "vmware_fusion" do |vmf, override|
     override.vm.box = "generic/ubuntu1804"
     vmf.gui = false
-    vmf.memory = "2048"
+    vmf.memory = "4096"
     vmf.cpus = 2
     override.vm.provision :salt do |salt|
       salt.minion_config = "contrib/salt/etc/minion_vmware.yaml"
