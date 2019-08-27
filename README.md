@@ -59,3 +59,6 @@ faas-cli secret create grafana-api-token --from-literal '' --gateway=http://loca
 # Deploy function from stack.yml
 faas-cli deploy --image acornies/grafana-annotate:0.1.2 --name grafana-annotate --env grafana_url=http://10.0.2.15:3000 --gateway=http://localhost:8080 --secret grafana-api-token
 ```
+
+## Slides
+View the Google Slides presentation [here](https://docs.google.com/presentation/d/1l1uficH6a2WLYydBLArzhKciI_KovpMZe6Ol9iv8JLs/edit?usp=sharing).
