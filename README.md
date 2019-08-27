@@ -5,6 +5,7 @@
 - vagrant
 - faas-cli
 - terraform
+- vegeta
 
 ## Demo steps
 
@@ -56,5 +57,5 @@ faas-cli secret create grafana-api-token --from-literal '' --gateway=http://loca
 # Source repo git@github.com:acornies/faas-grafana-annotate.git
 
 # Deploy function from stack.yml
-faas-cli deploy --image acornies/grafana-annotate:0.1.1 --name grafana-annotate --env grafana_url=http://10.0.2.15:3000 --gateway=http://localhost:8080 --secret grafana-api-token
+faas-cli deploy --image acornies/grafana-annotate:0.1.2 --name grafana-annotate --env grafana_url=http://10.0.2.15:3000 --gateway=http://localhost:8080 --secret grafana-api-token
 ```
