@@ -9,13 +9,13 @@
 
 ## Demo steps
 
-1) Provision local Vagrant environment
+Provision local Vagrant environment
 
 ```bash
 vagrant up
 ```
 
-2) Use Terraform to provision Vault and Nomad jobs
+Use Terraform to provision Vault and Nomad jobs
 
 ```bash
 # Initialize environment, download plugins
@@ -28,7 +28,16 @@ terraform apply -target=module.vault
 terraform apply -target=module.faas
 ```
 
-3) Use faas-cli to deploy a function
+OpenFaaS and supporting components should be avialable:
+
+- OpenFaaS gateway: http://localhost:8080
+- Consul: http://localhost:8500
+- Vault: http://localhost:8200
+- Nomad: http://localhost:4646
+- Prometheus: http://localhost:9090
+- Grafana: http://localhost:3000 (import dashboard id: 3434)
+
+Use faas-cli to deploy a function
 
 ```bash
 # Authenticate with OpenFaaS gateway
@@ -38,7 +47,7 @@ faas-cli login --gateway http://localhost:8080 --password vagrant
 faas-cli store deploy figlet --gateway http://localhost:8080
 ```
 
-4) Use `vegeta` to generate load
+Use `vegeta` to generate load
 
 ```bash
 # Invoke figlet 50/sec for 1 minute
@@ -48,7 +57,7 @@ echo "POST http://localhost:8080/function/figlet" | vegeta -cpus 1 attack -rate=
 vegeta report results.gob
 ```
 
-5) Deploy a custom function using secrets
+Deploy a custom function using secrets
 
 ```bash
 # Add the Grafana API secret
@@ -61,4 +70,5 @@ faas-cli deploy --image acornies/grafana-annotate:0.1.2 --name grafana-annotate 
 ```
 
 ## Slides
+
 View the Google Slides presentation [here](https://docs.google.com/presentation/d/1l1uficH6a2WLYydBLArzhKciI_KovpMZe6Ol9iv8JLs/edit?usp=sharing).
