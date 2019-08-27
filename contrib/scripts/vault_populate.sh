@@ -30,7 +30,7 @@ vault policy write nomad-server nomad-server-policy.hcl
 vault write /auth/token/roles/nomad-cluster @nomad-cluster-role.json
 
 # openfaas vault policy
-vault policy write ${POLICY_NAME} /vagrant/contrib/vault/policy.hcl
+# vault policy write ${POLICY_NAME} /vagrant/contrib/vault/policy.hcl
 
 # create basic auth secrets
 curl -i --header "X-Vault-Token: ${TOKEN}" \
@@ -38,18 +38,18 @@ curl -i --header "X-Vault-Token: ${TOKEN}" \
   --data '{"username":"admin", "password":"vagrant"}' \
   ${VAULT_URL}/v1/secret/openfaas/auth/credentials
 
-# create approle openfaas
-curl -v \
-  --header "X-Vault-Token: ${TOKEN}" \
-  --request POST \
-  --data '{"policies": "openfaas", "period": "5m"}' \
-  ${VAULT_URL}/v1/auth/approle/role/${POLICY_NAME}
+# # create approle openfaas
+# curl -i \
+#   --header "X-Vault-Token: ${TOKEN}" \
+#   --request POST \
+#   --data '{"policies": "openfaas", "period": "5m"}' \
+#   ${VAULT_URL}/v1/auth/approle/role/${POLICY_NAME}
 
-curl -v \
-  --header "X-Vault-Token: ${TOKEN}" \
-  ${VAULT_URL}/v1/auth/approle/role/${POLICY_NAME}/role-id -o ./role_id.json
+# curl -i \
+#   --header "X-Vault-Token: ${TOKEN}" \
+#   ${VAULT_URL}/v1/auth/approle/role/${POLICY_NAME}/role-id -o ./role_id.json
 
-curl -v \
-  --header "X-Vault-Token: ${TOKEN}" \
-  --request POST \
-  ${VAULT_URL}/v1/auth/approle/role/${POLICY_NAME}/secret-id -o ./secret_id.json
+# curl -i \
+#   --header "X-Vault-Token: ${TOKEN}" \
+#   --request POST \
+#   ${VAULT_URL}/v1/auth/approle/role/${POLICY_NAME}/secret-id -o ./secret_id.json

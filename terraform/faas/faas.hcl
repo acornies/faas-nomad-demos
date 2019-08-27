@@ -13,17 +13,17 @@ job "faas" {
         image = "quay.io/nicholasjackson/faas-nomad:v0.4.3-rc2"
 
         args = [
-          "-nomad_region", "${NOMAD_REGION}",
-          "-nomad_addr", "${NOMAD_IP_http}:4646",
-          "-consul_addr", "http://${NOMAD_IP_http}:8500",
-          "-statsd_addr", "${NOMAD_ADDR_statsd_statsd}",
-          "-node_addr", "${NOMAD_IP_http}",
-          "-vault_addr", "http://${NOMAD_IP_http}:8200",
-          "-vault_app_role_id", "",
-          "-vault_app_secret_id", "",
+          "-nomad_region", "$${NOMAD_REGION}",
+          "-nomad_addr", "$${NOMAD_IP_http}:4646",
+          "-consul_addr", "http://$${NOMAD_IP_http}:8500",
+          "-statsd_addr", "$${NOMAD_ADDR_statsd_statsd}",
+          "-node_addr", "$${NOMAD_IP_http}",
+          "-vault_addr", "http://$${NOMAD_IP_http}:8200",
+          "-vault_app_role_id", "${vault_approle_id}",
+          "-vault_app_secret_id", "${vault_approle_secret}",
           "-basic_auth_secret_path", "/secrets",
           "-enable_basic_auth=true",
-          "-logger_level", "TRACE"
+          "-logger_level", "DEBUG"
         ]
 
         port_map {
@@ -32,7 +32,7 @@ job "faas" {
       }
 
       vault {
-        policies = ["openfaas"]
+        policies = ["default", "openfaas"]
       }
       // basic auth from vault example
       // update -enable_basic_auth=true
@@ -102,7 +102,7 @@ EOH
       }
 
       vault {
-        policies = ["openfaas"]
+        policies = ["default", "openfaas"]
       }
       // basic auth from vault example
       // update -enable_basic_auth=true
@@ -165,7 +165,7 @@ EOH
       }
 
       vault {
-        policies = ["openfaas"]
+        policies = ["default", "openfaas"]
       }
       // basic auth from vault example
       // update -enable_basic_auth=true
@@ -367,15 +367,13 @@ EOH
           http = 9093
         }
 
-        dns_servers = ["${NOMAD_IP_http}"]
-
         args = [
           "--config.file=/local/alertmanager.yml"
         ]
       }
 
       vault {
-        policies = ["openfaas"]
+        policies = ["default", "openfaas"]
       }
       // basic auth from vault example
       // update -enable_basic_auth=true

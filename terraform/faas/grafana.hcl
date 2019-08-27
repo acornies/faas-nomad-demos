@@ -8,7 +8,7 @@ job "grafana" {
     count = 1
 
     vault {
-      policies = ["openfaas"]
+      policies = ["default", "openfaas"]
     }
 
     task "grafana-svc" {        
@@ -23,7 +23,7 @@ job "grafana" {
 
       env {            
         GF_SERVER_PROTOCOL="http"
-        GF_SERVER_ROOT_URL="http://${NOMAD_IP_http}:3000"
+        GF_SERVER_ROOT_URL="http://$${NOMAD_IP_http}:3000"
         GF_PATHS_PROVISIONING="/provisioning"
       }
 

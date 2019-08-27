@@ -1,4 +1,6 @@
 .vagrant
+.terraform
 *.log
 contrib/salt/states/nomad
 contrib/salt/states/vault
+terraform.tfstate*
