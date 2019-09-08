@@ -11,7 +11,7 @@ EOT
 resource "vault_approle_auth_backend_role" "openfaas" {
   backend   = "approle/"
   role_name = "openfaas"
-  token_policies  = ["default", "openfaas"]
+  token_policies  = ["default", "${vault_policy.openfaas.name}"]
   // 5 mins
   token_period = "300"
 }

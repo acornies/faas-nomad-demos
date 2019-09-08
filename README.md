@@ -1,4 +1,4 @@
-# faas-nomad-hug-workshop
+# faas-nomad-demos
 
 ## CLI requirements
 
@@ -19,6 +19,7 @@ Use Terraform to provision Vault and Nomad jobs
 
 ```bash
 # Initialize environment, download plugins
+cd terraform
 terraform init
 
 # Run the Vault module first
@@ -50,6 +51,7 @@ faas-cli store deploy figlet --gateway http://localhost:8080
 Use `vegeta` to generate load
 
 ```bash
+cd ../
 # Invoke figlet 50/sec for 1 minute
 echo "POST http://localhost:8080/function/figlet" | vegeta -cpus 1 attack -rate=50 -duration 1m -body figlet > results.gob
 
@@ -69,10 +71,29 @@ faas-cli secret create grafana-api-token --from-literal '' --gateway=http://loca
 faas-cli deploy --image acornies/grafana-annotate:0.1.2 --name grafana-annotate --env grafana_url=http://10.0.2.15:3000 --gateway=http://localhost:8080 --secret grafana-api-token
 ```
 
-## Social media
+## HashiConf 19 additions
 
-https://twitter.com/PierreNick/status/1166485988891381760
+```bash
+# Add stripe webhook payload secret
+faas-cli secret create stripe-webhook-secret --from-literal ''
 
-## Slides
+# Apply the Kafka module
+terraform apply -target=module.kafka
 
-View the Google Slides presentation [here](https://docs.google.com/presentation/d/1l1uficH6a2WLYydBLArzhKciI_KovpMZe6Ol9iv8JLs/edit?usp=sharing).
+# Login to Vagrant VM to create a kafka console consumer
+vagrant ssh
+
+# Find kafka broker container
+docker ps | grep kafka-brokers
+docker exec -it ${name} bash
+
+# Launch console consumer
+kafka-console-consumer --bootstrap-server 10.0.2.15:29092 --topic stripe-webhook-charge-dispute-created
+```
+
+Launch a function tied to our Kafka topic:
+
+```bash
+# Launch a function from store with special topic annotation
+faas-cli store deploy cows --annotation topic=stripe-webhook-charge-dispute-created
+```

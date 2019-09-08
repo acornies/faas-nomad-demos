@@ -8,6 +8,14 @@ module "faas" {
   vault_approle_secret = "${module.vault.secret_id[0]}"
 }
 
+module "kafka" {
+  source = "./kafka"
+}
+
+module "faas_kafka_connector" {
+  source = "./kafka_connector"
+}
+
 provider "nomad" {
   address = "http://localhost:4646"
 }
