@@ -60,7 +60,7 @@ Vagrant.configure("2") do |config|
     vb.gui = false
   
     # Customize the amount of memory on the VM:
-    vb.memory = "4096"
+    vb.memory = "6144"
     vb.cpus = 2
     override.vm.provision :salt do |salt|
       salt.minion_config = "contrib/salt/etc/minion_virtualbox.yaml"

@@ -45,7 +45,7 @@ Use faas-cli to deploy a function
 faas-cli login --gateway http://localhost:8080 --password vagrant
 
 # Deploy a function from the store
-faas-cli store deploy figlet --gateway http://localhost:8080
+faas-cli store deploy figlet
 ```
 
 Use `vegeta` to generate load
@@ -77,8 +77,9 @@ faas-cli deploy --image acornies/grafana-annotate:0.1.2 --name grafana-annotate 
 # Add stripe webhook payload secret
 faas-cli secret create stripe-webhook-secret --from-literal ''
 
-# Apply the Kafka module
+# Apply the Kafka modules
 terraform apply -target=module.kafka
+terraform apply -target=module.faas_kafka_connector
 
 # Login to Vagrant VM to create a kafka console consumer
 vagrant ssh
