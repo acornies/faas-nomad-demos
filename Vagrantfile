@@ -60,7 +60,7 @@ Vagrant.configure("2") do |config|
     vb.gui = false
   
     # Customize the amount of memory on the VM:
-    vb.memory = "6144"
+    vb.memory = "4096"
     vb.cpus = 2
     override.vm.provision :salt do |salt|
       salt.minion_config = "contrib/salt/etc/minion_virtualbox.yaml"
@@ -105,6 +105,9 @@ Vagrant.configure("2") do |config|
   #   apt-get update
   #   apt-get install -y apache2
   # SHELL
-  config.vm.provision :salt
+  config.vm.provision :salt do |salt|
+    salt.install_type = "git"
+    salt.install_args = "v2019.2.0"
+  end
   config.vm.provision "shell", path: "contrib/scripts/formulas.py"
 end
